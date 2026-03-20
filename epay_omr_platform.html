@@ -1,0 +1,2389 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>epay × OMR26 Masterclass Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swapfamily=DM+Mono:wght@400;500https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swapdisplay=swap" rel="stylesheet">
+<style>
+  :root {
+    --omr-black: #0a0a0a;
+    --omr-yellow: #FFE600;
+    --omr-yellow-dark: #D4C000;
+    --omr-white: #ffffff;
+    --omr-gray-100: #f5f5f3;
+    --omr-gray-200: #e8e8e4;
+    --omr-gray-400: #a8a8a0;
+    --omr-gray-600: #6b6b60;
+    --omr-gray-800: #2a2a24;
+    --epay-blue: #003DA5;
+    --epay-light: #e8eef8;
+    --radius: 4px;
+    --radius-lg: 8px;
+    --font: 'Outfit', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--omr-black);
+    color: var(--omr-white);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ═══════════════ LOGIN SCREEN ═══════════════ */
+  #login-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--omr-black);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 2rem;
+  }
+
+  .login-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 3rem;
+  }
+
+  .omr-badge {
+    background: var(--omr-yellow);
+    color: var(--omr-black);
+    font-size: 22px;
+    font-weight: 700;
+    padding: 6px 14px;
+    letter-spacing: -0.5px;
+  }
+
+  .login-x {
+    color: var(--omr-gray-400);
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  .epay-badge {
+    background: var(--epay-blue);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .sinc-badge {
+    background: #1a1a1a;
+    color: var(--omr-yellow);
+    font-size: 14px;
+    font-weight: 700;
+    padding: 6px 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--omr-yellow);
+  }
+
+  .multi-badge {
+    background: transparent;
+    color: var(--omr-gray-400);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+    border: 1px solid #333;
+    text-align: center;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 420px;
+    border: 1px solid #222;
+    background: #111;
+    padding: 2.5rem;
+  }
+
+  .login-card h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--omr-white);
+  }
+
+  .login-card p {
+    color: var(--omr-gray-400);
+    font-size: 14px;
+    margin-bottom: 2rem;
+    font-family: var(--mono);
+  }
+
+  .login-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--omr-gray-400);
+    margin-bottom: 8px;
+  }
+
+  .login-input {
+    width: 100%;
+    background: var(--omr-black);
+    border: 1px solid #333;
+    color: var(--omr-white);
+    font-family: var(--mono);
+    font-size: 15px;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 1.25rem;
+  }
+
+  .login-input:focus { border-color: var(--omr-yellow); }
+
+  .user-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 0.5rem;
+  }
+
+  .user-pill {
+    background: #1a1a1a;
+    color: var(--omr-gray-400);
+    border: 1px solid #2a2a2a;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.2px;
+  }
+
+  .user-pill:hover {
+    border-color: var(--omr-yellow);
+    color: var(--omr-yellow);
+  }
+
+  .user-pill.selected {
+    background: var(--omr-yellow);
+    color: var(--omr-black);
+    border-color: var(--omr-yellow);
+  }
+
+  .login-btn {
+    width: 100%;
+    background: var(--omr-yellow);
+    color: var(--omr-black);
+    border: none;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 14px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .login-btn:hover { background: var(--omr-yellow-dark); }
+  .login-btn:active { transform: scale(0.99); }
+
+  .login-error {
+    margin-top: 1rem;
+    color: #ff6b6b;
+    font-size: 13px;
+    font-family: var(--mono);
+    display: none;
+  }
+
+  /* ═══════════════ MAIN APP ═══════════════ */
+  #app { display: none; }
+
+  /* HEADER */
+  .site-header {
+    background: var(--omr-black);
+    border-bottom: 1px solid #1a1a1a;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-top {
+    background: var(--omr-yellow);
+    padding: 6px 0;
+    text-align: center;
+  }
+
+  .header-top span {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--omr-black);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: var(--mono);
+  }
+
+  .header-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .hl-omr {
+    background: var(--omr-yellow);
+    color: var(--omr-black);
+    font-size: 16px;
+    font-weight: 700;
+    padding: 3px 10px;
+  }
+
+  .hl-sep { color: #333; font-size: 16px; }
+
+  .hl-epay {
+    background: var(--epay-blue);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .hl-sinc {
+    background: #1a1a1a;
+    color: var(--omr-yellow);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid #2a2a1a;
+  }
+
+  .hl-multi {
+    color: var(--omr-gray-600);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 8px;
+    letter-spacing: 0.5px;
+    border: 1px solid #222;
+  }
+
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid #222;
+    overflow: hidden;
+  }
+
+  .nav-btn {
+    background: transparent;
+    color: var(--omr-gray-400);
+    border: none;
+    border-right: 1px solid #222;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .nav-btn:last-child { border-right: none; }
+  .nav-btn:hover { background: #1a1a1a; color: var(--omr-white); }
+  .nav-btn.active { background: var(--omr-yellow); color: var(--omr-black); }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .btn-new {
+    background: var(--omr-yellow);
+    color: var(--omr-black);
+    border: none;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-new:hover { background: var(--omr-yellow-dark); }
+
+  .btn-logout {
+    background: transparent;
+    color: var(--omr-gray-600);
+    border: 1px solid #222;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 7px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-logout:hover { border-color: #444; color: var(--omr-white); }
+
+  /* ═══════════════ LAYOUT ═══════════════ */
+  .page {
+    display: none;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+  }
+
+  .page.active { display: block; }
+
+  /* ═══════════════ FEED PAGE ═══════════════ */
+  .feed-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--omr-yellow);
+  }
+
+  .feed-title {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1px;
+  }
+
+  .feed-title span { color: var(--omr-yellow); }
+
+  .feed-meta {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--omr-gray-600);
+    text-align: right;
+  }
+
+  .filter-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-tag {
+    background: transparent;
+    color: var(--omr-gray-400);
+    border: 1px solid #222;
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-tag:hover { border-color: var(--omr-yellow); color: var(--omr-yellow); }
+  .filter-tag.active { background: var(--omr-yellow); color: var(--omr-black); border-color: var(--omr-yellow); }
+
+  /* POST CARD */
+  .post-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background: #111;
+  }
+
+  .post-card {
+    background: #0d0d0d;
+    padding: 1.5rem 2rem;
+    transition: background 0.15s;
+    position: relative;
+  }
+
+  .post-card:hover { background: #111; }
+
+  .post-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .post-author-avatar {
+    width: 32px;
+    height: 32px;
+    background: var(--epay-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .post-author-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--omr-white);
+  }
+
+  .post-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--omr-gray-600);
+  }
+
+  .post-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+  }
+
+  .tag-sales { background: #FFE600; color: #0a0a0a; }
+  .tag-linkedin { background: #0077B5; color: white; }
+  .tag-content { background: var(--epay-blue); color: white; }
+  .tag-event { background: #1a1a1a; color: var(--omr-yellow); border: 1px solid var(--omr-yellow); }
+  .tag-update { background: #1a3a1a; color: #4dff4d; }
+  .tag-research { background: #2a1a3a; color: #bf88ff; }
+
+  .post-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+  }
+
+  .post-card:hover .post-actions { opacity: 1; }
+
+  .act-btn {
+    background: transparent;
+    color: var(--omr-gray-600);
+    border: 1px solid #222;
+    font-size: 11px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-family: var(--mono);
+    transition: all 0.15s;
+  }
+
+  .act-btn:hover { border-color: var(--omr-yellow); color: var(--omr-yellow); }
+  .act-btn.del:hover { border-color: #ff4444; color: #ff4444; }
+
+  .post-title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.3px;
+    cursor: pointer;
+  }
+
+  .post-title:hover { color: var(--omr-yellow); }
+
+  .post-body {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #aaa;
+    margin-bottom: 1.25rem;
+    white-space: pre-wrap;
+  }
+
+  .post-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #1a1a1a;
+  }
+
+  .react-btn {
+    background: transparent;
+    border: none;
+    color: var(--omr-gray-600);
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 0;
+    transition: color 0.15s;
+    letter-spacing: 0.3px;
+  }
+
+  .react-btn:hover { color: var(--omr-yellow); }
+  .react-btn.liked { color: var(--omr-yellow); }
+
+  .react-icon {
+    font-size: 14px;
+    display: inline-block;
+    width: 16px;
+    text-align: center;
+  }
+
+  .comment-count {
+    background: transparent;
+    border: none;
+    color: var(--omr-gray-600);
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 0;
+    transition: color 0.15s;
+    margin-left: auto;
+  }
+
+  .comment-count:hover { color: var(--omr-white); }
+
+  /* COMMENTS */
+  .comments-area {
+    border-top: 1px solid #1a1a1a;
+    margin-top: 1rem;
+    padding-top: 1.25rem;
+    display: none;
+  }
+
+  .comments-area.open { display: block; }
+
+  .comment-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #141414;
+  }
+
+  .comment-item:last-of-type { border-bottom: none; }
+
+  .comment-avatar {
+    width: 26px;
+    height: 26px;
+    background: #1a1a2e;
+    border: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--omr-gray-400);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .comment-body { flex: 1; }
+
+  .comment-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .comment-author { font-size: 12px; font-weight: 600; }
+
+  .comment-time {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--omr-gray-600);
+  }
+
+  .comment-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #999;
+  }
+
+  .comment-del {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 11px;
+    cursor: pointer;
+    margin-left: auto;
+    padding: 0 4px;
+    transition: color 0.15s;
+  }
+
+  .comment-del:hover { color: #ff4444; }
+
+  .comment-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 1rem;
+    align-items: flex-end;
+  }
+
+  .comment-input {
+    flex: 1;
+    background: var(--omr-black);
+    border: 1px solid #1a1a1a;
+    color: var(--omr-white);
+    font-family: var(--font);
+    font-size: 13px;
+    padding: 8px 12px;
+    resize: none;
+    outline: none;
+    min-height: 38px;
+    max-height: 120px;
+    transition: border-color 0.15s;
+    overflow-y: auto;
+  }
+
+  .comment-input:focus { border-color: #333; }
+
+  .comment-submit {
+    background: #1a1a1a;
+    color: var(--omr-yellow);
+    border: 1px solid #222;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 8px 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+    height: 38px;
+  }
+
+  .comment-submit:hover { background: var(--omr-yellow); color: var(--omr-black); }
+
+  /* ═══════════════ MODAL / EDITOR ═══════════════ */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: #0d0d0d;
+    border: 1px solid #222;
+    width: 100%;
+    max-width: 720px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2rem;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .modal-close {
+    background: transparent;
+    border: 1px solid #222;
+    color: var(--omr-gray-600);
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .modal-close:hover { border-color: #444; color: var(--omr-white); }
+
+  .form-group { margin-bottom: 1.25rem; }
+
+  .form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--omr-gray-400);
+    margin-bottom: 6px;
+  }
+
+  .form-control {
+    width: 100%;
+    background: var(--omr-black);
+    border: 1px solid #1a1a1a;
+    color: var(--omr-white);
+    font-family: var(--font);
+    font-size: 14px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .form-control:focus { border-color: var(--omr-yellow); }
+
+  textarea.form-control {
+    resize: vertical;
+    min-height: 200px;
+    line-height: 1.75;
+  }
+
+  select.form-control {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  select.form-control option { background: #111; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 1.25rem;
+    border-top: 1px solid #1a1a1a;
+    margin-top: 1.25rem;
+  }
+
+  .btn-cancel {
+    background: transparent;
+    color: var(--omr-gray-600);
+    border: 1px solid #222;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-cancel:hover { border-color: #444; color: var(--omr-white); }
+
+  .btn-save {
+    background: var(--omr-yellow);
+    color: var(--omr-black);
+    border: none;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .btn-save:hover { background: var(--omr-yellow-dark); }
+
+  /* ═══════════════ KPI PAGE ═══════════════ */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: #111;
+    margin-bottom: 1px;
+  }
+
+  .kpi-card {
+    background: #0d0d0d;
+    padding: 1.5rem;
+    position: relative;
+  }
+
+  .kpi-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--omr-gray-600);
+    margin-bottom: 0.75rem;
+  }
+
+  .kpi-value {
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1;
+    color: var(--omr-yellow);
+    margin-bottom: 0.25rem;
+  }
+
+  .kpi-target {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--omr-gray-600);
+  }
+
+  .kpi-progress-bar {
+    height: 2px;
+    background: #1a1a1a;
+    margin-top: 1rem;
+    position: relative;
+  }
+
+  .kpi-progress-fill {
+    height: 100%;
+    background: var(--omr-yellow);
+    transition: width 0.6s ease;
+  }
+
+  .kpi-pct {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--omr-gray-600);
+    margin-top: 4px;
+  }
+
+  /* TIMELINE */
+  .timeline-section {
+    background: #0d0d0d;
+    border: 1px solid #111;
+    padding: 2rem;
+    margin-top: 1px;
+  }
+
+  .timeline-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--omr-gray-400);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .timeline-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #1a1a1a;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .tl-line {
+    position: absolute;
+    left: 11px;
+    top: 16px;
+    bottom: 16px;
+    width: 1px;
+    background: #1a1a1a;
+  }
+
+  .tl-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding-bottom: 1.25rem;
+    position: relative;
+  }
+
+  .tl-dot {
+    width: 23px;
+    height: 23px;
+    background: #0d0d0d;
+    border: 2px solid #333;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    transition: all 0.2s;
+  }
+
+  .tl-dot.done { background: var(--omr-yellow); border-color: var(--omr-yellow); }
+  .tl-dot.active { border-color: var(--omr-yellow); }
+
+  .tl-dot.done::after {
+    content: '';
+    width: 8px;
+    height: 5px;
+    border-left: 2px solid var(--omr-black);
+    border-bottom: 2px solid var(--omr-black);
+    transform: rotate(-45deg) translateY(-1px);
+    display: block;
+  }
+
+  .tl-dot.active::after {
+    content: '';
+    width: 7px;
+    height: 7px;
+    background: var(--omr-yellow);
+    border-radius: 50%;
+    display: block;
+  }
+
+  .tl-content { flex: 1; padding-top: 1px; }
+
+  .tl-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--omr-yellow);
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .tl-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--omr-white);
+    margin-bottom: 2px;
+  }
+
+  .tl-desc {
+    font-size: 12px;
+    color: var(--omr-gray-600);
+    font-family: var(--mono);
+  }
+
+  .tl-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+
+  /* ═══════════════ TARGETS PAGE ═══════════════ */
+  .targets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: #111;
+    margin-bottom: 2rem;
+  }
+
+  .target-card {
+    background: #0d0d0d;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .target-card:hover { background: #111; }
+
+  .tc-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .tc-segment {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    color: var(--omr-white);
+    margin-bottom: 2px;
+  }
+
+  .tc-role {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--omr-gray-600);
+  }
+
+  .tc-count {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    color: var(--omr-yellow);
+    line-height: 1;
+  }
+
+  .tc-label-small { font-family: var(--mono); font-size: 10px; color: var(--omr-gray-600); }
+
+  .tc-progress {
+    height: 3px;
+    background: #1a1a1a;
+    margin: 1rem 0 0.5rem;
+  }
+
+  .tc-fill {
+    height: 100%;
+    background: var(--omr-yellow);
+    transition: width 0.6s ease;
+  }
+
+  .tc-stats {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.75rem;
+  }
+
+  .tc-stat {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--omr-gray-600);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .tc-stat span { color: var(--omr-white); font-weight: 600; }
+
+  /* ═══════════════ EMPTY STATE ═══════════════ */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--omr-gray-600);
+  }
+
+  .empty-icon {
+    font-size: 40px;
+    margin-bottom: 1rem;
+    opacity: 0.4;
+    display: block;
+  }
+
+  .empty-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--omr-gray-400);
+    margin-bottom: 0.5rem;
+  }
+
+  .empty-sub { font-size: 13px; font-family: var(--mono); }
+
+  /* TOAST */
+  #toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--omr-yellow);
+    color: var(--omr-black);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 12px 24px;
+    z-index: 9999;
+    transition: transform 0.3s cubic-bezier(.22,.68,0,1.21);
+    pointer-events: none;
+    letter-spacing: 0.5px;
+  }
+
+  #toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* SECTION TITLES */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--omr-gray-400);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::before {
+    content: '';
+    width: 3px;
+    height: 16px;
+    background: var(--omr-yellow);
+    display: block;
+  }
+
+  .page-subtitle {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--omr-gray-600);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header-nav { display: none; }
+    .feed-title { font-size: 24px; }
+    .form-row { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .modal { padding: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN ══════════════ -->
+<div id="login-screen">
+  <div class="login-logo">
+    <img src="https://www.figma.com/api/mcp/asset/94427273-03c2-4afc-bab3-57f398cb1666" alt="OMR" style="height:36px;width:auto;filter:invert(1);">
+    <span class="login-x">×</span>
+    <div class="epay-badge">epay</div>
+    <span class="login-x">×</span>
+    <div class="sinc-badge">SINC</div>
+    <span class="login-x">×</span>
+    <div class="multi-badge">multi<br>sense</div>
+  </div>
+  <div class="login-card">
+    <h1>Masterclass Hub</h1>
+    <p>OMR26 · 06.05.2026 · Hamburg</p>
+
+    <label class="login-label">Wer bist du?</label>
+    <div class="user-grid" id="user-grid">
+      <button class="user-pill" onclick="selectUser(this, 'Volker')">Volker</button>
+      <button class="user-pill" onclick="selectUser(this, 'Jacki')">Jacki</button>
+      <button class="user-pill" onclick="selectUser(this, 'Jana')">Jana</button>
+      <button class="user-pill" onclick="selectUser(this, 'Alex')">Alex</button>
+      <button class="user-pill" onclick="selectUser(this, 'Niclas')">Niclas</button>
+      <button class="user-pill" onclick="selectUser(this, 'Olaf')">Olaf</button>
+    </div>
+
+    <label class="login-label" style="margin-top:1.25rem">Passwort</label>
+    <input class="login-input" type="password" id="pw-input" placeholder="••••••••••" autocomplete="current-password">
+    <button class="login-btn" id="login-btn">Einloggen →</button>
+    <div class="login-error" id="login-error">Falsches Passwort oder kein Nutzer gewählt.</div>
+  </div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-top" style="display:flex;align-items:center;justify-content:center;gap:12px">
+      <span>OMR26 Masterclass · 06. Mai 2026 · 10:30 Uhr · Hamburg · epay × SINC Novation × multisense</span>
+    </div>
+    <div class="header-main">
+      <a class="header-logo" href="#" onclick="return false;">
+        <img src="https://www.figma.com/api/mcp/asset/94427273-03c2-4afc-bab3-57f398cb1666" alt="OMR" style="height:22px;width:auto;filter:invert(1);flex-shrink:0;">
+        <span class="hl-sep">×</span>
+        <div class="hl-epay">epay</div>
+        <span class="hl-sep">×</span>
+        <div class="hl-sinc">SINC</div>
+        <span class="hl-sep">×</span>
+        <div class="hl-multi">multisense</div>
+      </a>
+      <nav class="header-nav">
+        <button class="nav-btn active" onclick="showPage('feed')">Updates</button>
+        <button class="nav-btn" onclick="showPage('kpis')">KPIs & Timeline</button>
+        <button class="nav-btn" onclick="showPage('targets')">Zielgruppen</button>
+        <button class="nav-btn" onclick="showPage('posts')">LinkedIn Posts</button>
+        <button class="nav-btn" onclick="showPage('assets')">OMR Assets</button>
+      </nav>
+      <div class="header-actions">
+        <div id="current-user-badge" style="font-size:12px;font-weight:700;padding:6px 14px;color:#0a0a0a;font-family:var(--font);letter-spacing:0.3px;flex-shrink:0"></div>
+        <button class="btn-new" onclick="openEditor()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="2"/></svg>
+          Neuer Beitrag
+        </button>
+        <button class="btn-logout" onclick="logout()">↩ Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════ FEED PAGE ══════ -->
+  <div class="page active" id="page-feed">
+    <div class="feed-header">
+      <div>
+        <div class="feed-title">Kommunikation<br><span>OMR26.</span></div>
+        <div style="display:flex;gap:6px;margin-top:0.75rem;flex-wrap:wrap;align-items:center">
+          <div style="background:var(--omr-yellow);color:var(--omr-black);font-size:10px;font-weight:800;padding:2px 8px;letter-spacing:1px">OMR</div>
+          <span style="color:#333;font-size:10px">×</span>
+          <div style="background:var(--epay-blue);color:white;font-size:10px;font-weight:700;padding:2px 8px;letter-spacing:1px">epay</div>
+          <span style="color:#333;font-size:10px">×</span>
+          <div style="background:#1a1a1a;color:var(--omr-yellow);font-size:10px;font-weight:700;padding:2px 8px;letter-spacing:1.5px;border:1px solid #2a2a1a">SINC</div>
+          <span style="color:#333;font-size:10px">×</span>
+          <div style="color:var(--omr-gray-600);font-size:10px;font-weight:500;padding:2px 6px;border:1px solid #222;letter-spacing:0.3px">multisense</div>
+        </div>
+      </div>
+      <div class="feed-meta">
+        Bewerbungsphase aktiv<br>18.03. – 16.04.2026
+      </div>
+    </div>
+
+    <!-- OMR Visual Strip -->
+    <div style="display:grid;grid-template-columns:1fr 280px;gap:1px;background:#111;margin-bottom:1.5rem;border:1px solid #1a1a1a">
+      <div style="background:#0a0a0a;padding:1.5rem 2rem;display:flex;flex-direction:column;justify-content:center;gap:0.75rem">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.25rem">
+          <img src="https://www.figma.com/api/mcp/asset/94427273-03c2-4afc-bab3-57f398cb1666" alt="OMR" style="height:18px;width:auto;filter:invert(1)">
+          <span style="color:#333;font-size:12px">×</span>
+          <span style="font-size:11px;font-weight:700;color:var(--omr-yellow);letter-spacing:1px;font-family:var(--mono)">MASTERCLASS 2026</span>
+        </div>
+        <div style="font-size:22px;font-weight:800;letter-spacing:-0.5px;line-height:1.2">Branded Money –<br><span style="color:var(--omr-yellow)">der unterschätzte Hebel.</span></div>
+        <div style="font-size:13px;color:var(--omr-gray-600);font-family:var(--mono);line-height:1.6">06.05.2026 · 10:30 Uhr · Hamburg<br>Kapazität: 200 Teilnehmer · Bewerbung erforderlich</div>
+        <div style="display:flex;gap:8px;margin-top:0.25rem;flex-wrap:wrap">
+          <span style="background:var(--omr-yellow);color:var(--omr-black);font-size:10px;font-weight:800;padding:3px 10px;letter-spacing:1px">#OMR26</span>
+          <span style="background:#1a1a2e;color:#8b8bff;font-size:10px;font-weight:700;padding:3px 10px;letter-spacing:0.5px">#BrandedMoney</span>
+          <span style="background:var(--epay-blue);color:white;font-size:10px;font-weight:700;padding:3px 10px;letter-spacing:0.5px">epay</span>
+          <span style="background:#1a1a1a;color:var(--omr-yellow);font-size:10px;font-weight:700;padding:3px 10px;letter-spacing:1px;border:1px solid #2a2a1a">SINC</span>
+          <span style="border:1px solid #222;color:var(--omr-gray-600);font-size:10px;padding:3px 8px">multisense</span>
+        </div>
+      </div>
+      <div style="position:relative;overflow:hidden;min-height:200px">
+        <img src="https://www.figma.com/api/mcp/asset/e9378561-59a5-4ace-8399-369796500f30" alt="OMR26 Masterclass" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center">
+        <div style="position:absolute;inset:0;background:linear-gradient(to right, rgba(10,10,10,0.5) 0%, transparent 40%)"></div>
+      </div>
+    </div>
+
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-tag active" onclick="filterPosts('alle', this)">Alle</button>
+      <button class="filter-tag" onclick="filterPosts('Sales', this)">Sales</button>
+      <button class="filter-tag" onclick="filterPosts('LinkedIn', this)">LinkedIn</button>
+      <button class="filter-tag" onclick="filterPosts('Content', this)">Content</button>
+      <button class="filter-tag" onclick="filterPosts('Event', this)">Event</button>
+      <button class="filter-tag" onclick="filterPosts('Update', this)">Update</button>
+    </div>
+
+    <div class="post-grid" id="post-list">
+      <!-- posts rendered here -->
+    </div>
+  </div>
+
+  <!-- ══════ KPI PAGE ══════ -->
+  <div class="page" id="page-kpis">
+    <div class="section-header">
+      <div class="section-title">KPIs & Fortschritt</div>
+    </div>
+    <p class="page-subtitle">Stand: 20.03.2026 · Bewerbungsphase läuft ab 18.03.</p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Masterclass-Bewerbungen</div>
+        <div class="kpi-value" id="kpi-bew">47</div>
+        <div class="kpi-target">Ziel: 300+</div>
+        <div class="kpi-progress-bar"><div class="kpi-progress-fill" style="width:16%"></div></div>
+        <div class="kpi-pct">16 % erreicht</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Qualifizierte Leads</div>
+        <div class="kpi-value" id="kpi-leads">20</div>
+        <div class="kpi-target">Ziel: 200</div>
+        <div class="kpi-progress-bar"><div class="kpi-progress-fill" style="width:10%"></div></div>
+        <div class="kpi-pct">10 % erreicht</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">LinkedIn Impressions</div>
+        <div class="kpi-value">12k</div>
+        <div class="kpi-target">Ziel: 100.000+</div>
+        <div class="kpi-progress-bar"><div class="kpi-progress-fill" style="width:12%"></div></div>
+        <div class="kpi-pct">12 % erreicht</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Direktansprachen</div>
+        <div class="kpi-value">83</div>
+        <div class="kpi-target">Ziel: 500+</div>
+        <div class="kpi-progress-bar"><div class="kpi-progress-fill" style="width:17%"></div></div>
+        <div class="kpi-pct">17 % erreicht</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">WP Downloads</div>
+        <div class="kpi-value">38</div>
+        <div class="kpi-target">Ziel: 100+</div>
+        <div class="kpi-progress-bar"><div class="kpi-progress-fill" style="width:38%"></div></div>
+        <div class="kpi-pct">38 % erreicht</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Key Account Leads</div>
+        <div class="kpi-value">7</div>
+        <div class="kpi-target">Ziel: 20</div>
+        <div class="kpi-progress-bar"><div class="kpi-progress-fill" style="width:35%"></div></div>
+        <div class="kpi-pct">35 % erreicht</div>
+      </div>
+    </div>
+
+    <div class="timeline-section">
+      <div class="timeline-title">OMR Masterclass Timeline</div>
+      <div class="timeline">
+        <div class="tl-line"></div>
+        <div class="tl-item">
+          <div class="tl-dot done"></div>
+          <div class="tl-content">
+            <div class="tl-date">12.03.2026</div>
+            <div class="tl-label">Upload Titel, Beschreibung & Speaker-Profil</div>
+            <div class="tl-desc">Frist erfüllt · OMR Manager aktualisiert</div>
+          </div>
+          <span class="tl-badge tag-update">erledigt</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot done"></div>
+          <div class="tl-content">
+            <div class="tl-date">18.03.2026</div>
+            <div class="tl-label">Timetable live · Bewerbungsphase startet</div>
+            <div class="tl-desc">Bewerbungslink aktiv · LinkedIn-Kampagne gestartet</div>
+          </div>
+          <span class="tl-badge tag-event">live</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot active"></div>
+          <div class="tl-content">
+            <div class="tl-date">18.03. – 16.04.2026</div>
+            <div class="tl-label">Bewerbungsphase (Hauptphase)</div>
+            <div class="tl-desc">LinkedIn-Kampagne aktiv · Direktansprache Wunschpartner & CMOs</div>
+          </div>
+          <span class="tl-badge tag-linkedin">aktiv</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-date">17.04. – 21.04.2026</div>
+            <div class="tl-label">Verlängerung Bewerbungsphase</div>
+            <div class="tl-desc">Finaler Push · Countdown-Posts · Follow-up aller offenen Kontakte</div>
+          </div>
+          <span class="tl-badge tag-sales">bald</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-date">20.04. – 21.04.2026</div>
+            <div class="tl-label">Auswahl Teilnehmer*innen (Di 23:59)</div>
+            <div class="tl-desc">Selektion nach Jobtitel · Unternehmen · Unternehmensgröße</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-date">23.04.2026 · 10:00 Uhr</div>
+            <div class="tl-label">Versand Zu- und Absagen</div>
+            <div class="tl-desc">Sofort-Follow-up Sales an Zugesagte · Absagen als Warm Leads markieren</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-date">23.04. – 06.05.2026</div>
+            <div class="tl-label">Nachrückphase</div>
+            <div class="tl-desc">Retention-Posts · Direkte Einladungen an Nachrücker</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <div class="tl-date">05./06.05.2026</div>
+            <div class="tl-label">OMR26 Festival · Masterclass 10:30 Uhr</div>
+            <div class="tl-desc">Live-Content · 200 Teilnehmer · Hamburg</div>
+          </div>
+          <span class="tl-badge tag-event">event</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ TARGETS PAGE ══════ -->
+  <div class="page" id="page-targets">
+    <div class="section-header">
+      <div class="section-title">Zielgruppen & Lead-Tracking</div>
+    </div>
+    <p class="page-subtitle">4 Segmente · 240 Leads Gesamtziel (200 Pflicht-OKR + 40 Puffer)</p>
+
+    <div class="targets-grid">
+      <div class="target-card">
+        <div class="tc-header">
+          <div>
+            <div class="tc-segment">CMOs & Marketingentscheider</div>
+            <div class="tc-role">CMO · VP Marketing · Head of Brand · Chief Brand Officer</div>
+          </div>
+          <div style="text-align:right">
+            <div class="tc-count">7</div>
+            <div class="tc-label-small">von 50 Ziel</div>
+          </div>
+        </div>
+        <div class="tc-progress"><div class="tc-fill" style="width:14%"></div></div>
+        <div class="tc-stats">
+          <div class="tc-stat">Priorität <span>1</span></div>
+          <div class="tc-stat">Angesprochen <span>23</span></div>
+          <div class="tc-stat">Konversion <span>30%</span></div>
+        </div>
+      </div>
+      <div class="target-card">
+        <div class="tc-header">
+          <div>
+            <div class="tc-segment">Brand Manager & Marketing</div>
+            <div class="tc-role">Brand Manager · Head of Marketing · Category Manager</div>
+          </div>
+          <div style="text-align:right">
+            <div class="tc-count">5</div>
+            <div class="tc-label-small">von 70 Ziel</div>
+          </div>
+        </div>
+        <div class="tc-progress"><div class="tc-fill" style="width:7%"></div></div>
+        <div class="tc-stats">
+          <div class="tc-stat">Priorität <span>2</span></div>
+          <div class="tc-stat">Angesprochen <span>18</span></div>
+          <div class="tc-stat">Konversion <span>28%</span></div>
+        </div>
+      </div>
+      <div class="target-card">
+        <div class="tc-header">
+          <div>
+            <div class="tc-segment">Retail & Wunschpartner</div>
+            <div class="tc-role">Zalando · Douglas · IKEA · Rewe · dm · Saturn u.a.</div>
+          </div>
+          <div style="text-align:right">
+            <div class="tc-count">5</div>
+            <div class="tc-label-small">von 50 Ziel</div>
+          </div>
+        </div>
+        <div class="tc-progress"><div class="tc-fill" style="width:10%"></div></div>
+        <div class="tc-stats">
+          <div class="tc-stat">Priorität <span>2</span></div>
+          <div class="tc-stat">Angesprochen <span>31</span></div>
+          <div class="tc-stat">Konversion <span>16%</span></div>
+        </div>
+      </div>
+      <div class="target-card">
+        <div class="tc-header">
+          <div>
+            <div class="tc-segment">Kommunikationsagenturen</div>
+            <div class="tc-role">Strategie-Direktoren · GF · Head of Brand Experience</div>
+          </div>
+          <div style="text-align:right">
+            <div class="tc-count">3</div>
+            <div class="tc-label-small">von 30 Ziel</div>
+          </div>
+        </div>
+        <div class="tc-progress"><div class="tc-fill" style="width:10%"></div></div>
+        <div class="tc-stats">
+          <div class="tc-stat">Priorität <span>3</span></div>
+          <div class="tc-stat">Angesprochen <span>11</span></div>
+          <div class="tc-stat">Konversion <span>27%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-section" style="margin-top:0">
+      <div class="timeline-title">Messaging pro Segment</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#111">
+        <div style="background:#0d0d0d;padding:1.25rem">
+          <div style="font-size:12px;font-weight:700;color:var(--omr-yellow);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.75rem;font-family:var(--mono)">CMOs</div>
+          <div style="font-size:13px;color:#aaa;line-height:1.7">«Evidenzbasierter Beweis: Gift Cards sind messbarer, self-financing Brand-Touchpoint – nicht erklärt, empirisch belegt. +71,4 % Markenerlebnis.»</div>
+          <div style="margin-top:0.75rem;font-size:11px;font-family:var(--mono);color:var(--omr-gray-600)">Pain Point: Nachweis der Markenwirkung</div>
+        </div>
+        <div style="background:#0d0d0d;padding:1.25rem">
+          <div style="font-size:12px;font-weight:700;color:var(--omr-yellow);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.75rem;font-family:var(--mono)">Brand Manager</div>
+          <div style="font-size:13px;color:#aaa;line-height:1.7">«Praxisbeispiele (Tchibo, Thalia, CP): Wie Gift Cards in bestehende Markenstrategie integriert und gemessen werden können.»</div>
+          <div style="margin-top:0.75rem;font-size:11px;font-family:var(--mono);color:var(--omr-gray-600)">Pain Point: Touchpoints nicht aus Marketing gesteuert</div>
+        </div>
+        <div style="background:#0d0d0d;padding:1.25rem">
+          <div style="font-size:12px;font-weight:700;color:var(--omr-yellow);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.75rem;font-family:var(--mono)">Retail & Partner</div>
+          <div style="font-size:13px;color:#aaa;line-height:1.7">«Ihre Gutscheinkarte tut mehr als Sie denken – als Top-Markentouchpoint vergleichbar mit reichweitenstarken Medienkanälen. Wir haben die Zahlen dazu.»</div>
+          <div style="margin-top:0.75rem;font-size:11px;font-family:var(--mono);color:var(--omr-gray-600)">Hebel: Eigene Branche in Studie vertreten</div>
+        </div>
+        <div style="background:#0d0d0d;padding:1.25rem">
+          <div style="font-size:12px;font-weight:700;color:var(--omr-yellow);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.75rem;font-family:var(--mono)">Agenturen</div>
+          <div style="font-size:13px;color:#aaa;line-height:1.7">«Branded Money als neues Beratungsprodukt: eine Maßnahme, die Marke und Umsatz verbindet – und sich selbst finanziert. Co-Host-Perspektive möglich.»</div>
+          <div style="margin-top:0.75rem;font-size:11px;font-family:var(--mono);color:var(--omr-gray-600)">Anreiz: Multiplikatorrolle, Studienrechte</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ POSTS / LINKEDIN PAGE ══════ -->
+  <div class="page" id="page-posts">
+    <div class="section-header" style="flex-wrap:wrap;gap:1rem">
+      <div class="section-title">LinkedIn Post-Vorlagen</div>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <span style="font-family:var(--mono);font-size:10px;color:var(--omr-gray-600);letter-spacing:0.8px;text-transform:uppercase">Team:</span>
+        <div id="team-pills" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+      </div>
+    </div>
+    <p class="page-subtitle">10 Posts · gemeinsam editierbar · mit Versionsverlauf · Status-Tracking</p>
+    <div id="linkedin-posts-list"></div>
+  </div>
+
+
+  <!-- ══════ ASSETS PAGE ══════ -->
+  <div class="page" id="page-assets">
+    <div class="section-header">
+      <div class="section-title">OMR26 Aussteller-Assets</div>
+    </div>
+    <p class="page-subtitle">Offizielle Figma-Templates · direkt einsetzbar für Social Media & LinkedIn</p>
+
+    <!-- OMR Logo Section -->
+    <div style="margin-bottom:2rem">
+      <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--omr-gray-400);display:flex;align-items:center;gap:12px;margin-bottom:1rem">
+        OMR Logo
+        <div style="flex:1;height:1px;background:#1a1a1a"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#111;max-width:700px">
+        <div style="background:#f5f5f5;padding:2rem;display:flex;flex-direction:column;align-items:center;gap:1rem">
+          <img src="https://www.figma.com/api/mcp/asset/94427273-03c2-4afc-bab3-57f398cb1666" alt="OMR Logo schwarz" style="max-height:60px;width:auto;object-fit:contain">
+          <div style="font-family:var(--mono);font-size:11px;color:#666;text-align:center">Schwarz · auf hellem Hintergrund</div>
+          <a href="https://www.figma.com/api/mcp/asset/94427273-03c2-4afc-bab3-57f398cb1666" download style="background:transparent;color:#333;border:1px solid #ccc;font-family:var(--mono);font-size:10px;padding:5px 14px;text-decoration:none;letter-spacing:0.8px;transition:all 0.15s" onmouseover="this.style.borderColor='#000';this.style.color='#000'" onmouseout="this.style.borderColor='#ccc';this.style.color='#333'">Download</a>
+        </div>
+        <div style="background:#0a0a0a;padding:2rem;display:flex;flex-direction:column;align-items:center;gap:1rem">
+          <img src="https://www.figma.com/api/mcp/asset/94427273-03c2-4afc-bab3-57f398cb1666" alt="OMR Logo weiss" style="max-height:60px;width:auto;object-fit:contain;filter:invert(1)">
+          <div style="font-family:var(--mono);font-size:11px;color:#666;text-align:center">Weiß · auf dunklem Hintergrund</div>
+          <a href="https://www.figma.com/api/mcp/asset/94427273-03c2-4afc-bab3-57f398cb1666" download style="background:transparent;color:var(--omr-gray-600);border:1px solid #333;font-family:var(--mono);font-size:10px;padding:5px 14px;text-decoration:none;letter-spacing:0.8px;transition:all 0.15s" onmouseover="this.style.borderColor='var(--omr-yellow)';this.style.color='var(--omr-yellow)'" onmouseout="this.style.borderColor='#333';this.style.color='var(--omr-gray-600)'">Download</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Templates -->
+    <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--omr-gray-400);display:flex;align-items:center;gap:12px;margin-bottom:1.25rem">
+      Aussteller Social-Media-Templates
+      <div style="flex:1;height:1px;background:#1a1a1a"></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:#111;margin-bottom:2rem">
+
+      <!-- 1:1 -->
+      <div style="background:#0d0d0d;padding:1.5rem">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem">
+          <span style="background:var(--omr-yellow);color:var(--omr-black);font-size:10px;font-weight:800;padding:2px 8px;letter-spacing:1px">1080 × 1080</span>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--omr-gray-600)">Instagram Feed · LinkedIn</span>
+        </div>
+        <div style="position:relative;width:100%;padding-bottom:100%;overflow:hidden;background:#111;border:1px solid #1a1a1a;margin-bottom:1rem">
+          <img src="https://www.figma.com/api/mcp/asset/e9378561-59a5-4ace-8399-369796500f30" alt="OMR26 1080x1080 Template" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <a href="https://www.figma.com/api/mcp/asset/e9378561-59a5-4ace-8399-369796500f30" download="omr26_1080x1080.jpg" target="_blank" style="background:var(--omr-yellow);color:var(--omr-black);border:none;font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:8px 16px;text-decoration:none;display:inline-block;transition:background 0.15s" onmouseover="this.style.background='#D4C000'" onmouseout="this.style.background='var(--omr-yellow)'">Asset herunterladen</a>
+          <span style="font-family:var(--mono);font-size:10px;color:var(--omr-gray-600)">JPG · 1:1</span>
+        </div>
+      </div>
+
+      <!-- 4:5 -->
+      <div style="background:#0d0d0d;padding:1.5rem">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem">
+          <span style="background:var(--omr-yellow);color:var(--omr-black);font-size:10px;font-weight:800;padding:2px 8px;letter-spacing:1px">1080 × 1350</span>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--omr-gray-600)">Instagram Feed · 4:5</span>
+        </div>
+        <div style="position:relative;width:100%;padding-bottom:125%;overflow:hidden;background:#111;border:1px solid #1a1a1a;margin-bottom:1rem">
+          <img src="https://www.figma.com/api/mcp/asset/95d63782-a31a-4887-9673-263ad3478245" alt="OMR26 1080x1350 Template" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <a href="https://www.figma.com/api/mcp/asset/95d63782-a31a-4887-9673-263ad3478245" download="omr26_1080x1350.jpg" target="_blank" style="background:var(--omr-yellow);color:var(--omr-black);border:none;font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:8px 16px;text-decoration:none;display:inline-block;transition:background 0.15s" onmouseover="this.style.background='#D4C000'" onmouseout="this.style.background='var(--omr-yellow)'">Asset herunterladen</a>
+          <span style="font-family:var(--mono);font-size:10px;color:var(--omr-gray-600)">JPG · 4:5</span>
+        </div>
+      </div>
+
+      <!-- 9:16 Story -->
+      <div style="background:#0d0d0d;padding:1.5rem">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem">
+          <span style="background:var(--omr-yellow);color:var(--omr-black);font-size:10px;font-weight:800;padding:2px 8px;letter-spacing:1px">1080 × 1920</span>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--omr-gray-600)">Story · Reels · TikTok · 9:16</span>
+        </div>
+        <div style="position:relative;width:100%;padding-bottom:177.8%;overflow:hidden;background:#111;border:1px solid #1a1a1a;margin-bottom:1rem">
+          <img src="https://www.figma.com/api/mcp/asset/55ac5597-05dc-4f32-9340-6960fe06daca" alt="OMR26 1080x1920 Template" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <a href="https://www.figma.com/api/mcp/asset/55ac5597-05dc-4f32-9340-6960fe06daca" download="omr26_1080x1920.jpg" target="_blank" style="background:var(--omr-yellow);color:var(--omr-black);border:none;font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:8px 16px;text-decoration:none;display:inline-block;transition:background 0.15s" onmouseover="this.style.background='#D4C000'" onmouseout="this.style.background='var(--omr-yellow)'">Asset herunterladen</a>
+          <span style="font-family:var(--mono);font-size:10px;color:var(--omr-gray-600)">JPG · 9:16</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Usage Guide -->
+    <div style="background:#0d0d0d;border:1px solid #1a1a1a;padding:1.5rem 2rem">
+      <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--omr-yellow);margin-bottom:1rem;font-family:var(--mono)">Verwendungshinweise</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--omr-white);margin-bottom:0.5rem">Hashtags & Mentions</div>
+          <div style="font-family:var(--mono);font-size:12px;color:var(--omr-gray-400);line-height:1.8">#OMR26<br>#OMRFestival<br>@omr_festival<br>#BrandedMoney<br>#epay #SINC #multisense</div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--omr-white);margin-bottom:0.5rem">Empfohlene Nutzung</div>
+          <div style="font-size:13px;color:var(--omr-gray-600);line-height:1.8">
+            1:1 → LinkedIn Feed, Instagram<br>
+            4:5 → Instagram optimiert<br>
+            9:16 → Stories, Reels<br>
+            Logo schwarz → auf hellem Bg<br>
+            Logo weiß → auf dunklem Bg
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /app -->
+
+<!-- ══════ EDITOR MODAL ══════ -->
+<div class="modal-overlay" id="editor-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-headline">Neuer Beitrag</div>
+      <button class="modal-close" onclick="closeEditor()">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Titel</label>
+      <input class="form-control" type="text" id="edit-title" placeholder="Titel des Beitrags…">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Kategorie</label>
+        <select class="form-control" id="edit-category">
+          <option value="Sales">Sales</option>
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="Content">Content</option>
+          <option value="Event">Event</option>
+          <option value="Update">Update</option>
+          <option value="Research">Research</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Autor</label>
+        <input class="form-control" type="text" id="edit-author" placeholder="Dein Name…">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Inhalt</label>
+      <textarea class="form-control" id="edit-body" placeholder="Beitragstext, Updates, Informationen…"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeEditor()">Abbrechen</button>
+      <button class="btn-save" onclick="savePost()">Beitrag speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+const PASSWORD = 'omr26epay';
+const STORAGE_KEY = 'epay_omr_posts';
+const COMMENTS_KEY = 'epay_omr_comments';
+const LIKES_KEY = 'epay_omr_likes';
+const LI_POSTS_KEY = 'epay_omr_li_posts';
+const LI_HISTORY_KEY = 'epay_omr_li_history';
+
+const USERS = ['Volker','Jacki','Jana','Alex','Niclas','Olaf'];
+const USER_COLORS = {
+  Volker: '#7c6af7', Jacki: '#f77c6a', Jana: '#6af79a',
+  Alex: '#6ab8f7', Niclas: '#f7d06a', Olaf: '#f76ab8'
+};
+
+let editingId = null;
+let activeFilter = 'alle';
+let currentUser = null;
+let selectedUserOnLogin = null;
+
+const DEFAULT_POSTS = [
+  {
+    id: 1,
+    title: 'Timetable ist live – Bewerbungslink jetzt aktiv!',
+    body: 'Ab sofort können sich Teilnehmer für unsere Masterclass bewerben. Der Link ist im OMR-Timetable hinterlegt.\n\nBitte sofort alle vorbereiteten InMails an Wunschpartner versenden und den Bewerbungslink in alle laufenden Gespräche einbetten.\n\nZiel: Erste 50 Bewerbungen bis Ende KW 12.',
+    category: 'Event',
+    author: 'Alexander Gerstl',
+    date: '18.03.2026',
+    ts: 1742256000
+  },
+  {
+    id: 2,
+    title: 'Post 1 live: +71,4 % Studien-Highlight performt stark',
+    body: 'Der erste LinkedIn-Post zur Studie läuft seit 2 Tagen und zeigt bereits gute organische Reichweite.\n\nAktuell: ~3.200 Impressions, 47 Reaktionen, 8 Kommentare, 12 Klicks auf WP-Download-Link.\n\nNächster Schritt: Post 3 (Thought Leadership "Marketing wird effizienter, Marken wachsen trotzdem nicht") ist für kommenden Donnerstag geplant.',
+    category: 'LinkedIn',
+    author: 'Content Team',
+    date: '20.03.2026',
+    ts: 1742428800
+  },
+  {
+    id: 3,
+    title: 'Sales-Briefing: InMail-Vorlagen freigegeben',
+    body: 'Die Vorlagen für Direktansprache (Wunschpartner & CMOs) sind finalisiert und im Kommunikationsplan hinterlegt.\n\nBitte alle Account Manager:\n– Wunschpartner-Liste aus CRM prüfen und priorisieren\n– InMail-Vorlage für Wunschpartner-Erstkontakt verwenden\n– Nach 5 Tagen ohne Rückmeldung: Follow-up per E-Mail\n\nZiel: 30-50 Direktansprachen bis 05. April.',
+    category: 'Sales',
+    author: 'Sales Team',
+    date: '20.03.2026',
+    ts: 1742515200
+  }
+];
+
+const LINKEDIN_POSTS = [
+  { phase: 'PHASE 1', tag: 'INSIGHT', title: 'Studien-Highlight: +71,4 % Markenerlebnis', date: 'ab KW 11 · mehrfach einsetzbar', text: '+71,4 % mehr Markenerlebnis. Nicht durch ein neues Werbeformat.\nNicht durch ein Influencer-Budget.\nSondern durch eine Gutscheinkarte.\n\nDas klingt erstaunlich – bis man die Zahlen sieht.\n\nWir haben gemeinsam mit SINC Novation und multisense 6.010 Personen befragt und 30 Touchpoints verglichen. Ergebnis: Prepaid-Geschenkkarten gehören zu den stärksten Markentouchpoints überhaupt – vergleichbar mit reichweitenstarken Medienkanälen. Und sie finanzieren sich selbst.\n\nDas vollständige Whitepaper "Branded Money" ist jetzt verfügbar.\nDownload im Kommentar.\n\n#BrandedMoney #GiftCards #MarketingROI #Branding #CMO #epay' },
+  { phase: 'PHASE 1', tag: 'MEINUNG', title: 'Marketing wird effizienter. Marken wachsen trotzdem nicht.', date: 'KW 12–13', text: 'Marketing wird effizienter. Marken wachsen trotzdem nicht.\n\nLaut McKinsey ist Markenbildung die wichtigste strategische Priorität von 500 CMOs.\nUnd gleichzeitig das Thema mit dem größten Handlungsbedarf.\n\nDer Grund: Nur 20 bis 25 % der Brand Experience entstehen durch Werbung. Der Rest entsteht durch Erlebnisse und systemische Touchpoints – die bislang nicht aus dem Marketing gesteuert werden.\n\nEin typisches Beispiel: Die Gutscheinkarte.\nMillionen Käufe jährlich. Direkter Markenmoment.\nUnd die meisten CMOs wissen nicht, was sie wirklich bewirkt.\n\nUnsere Studie "Branded Money" liefert die Antwort. [Link]\n\n#CMO #BrandExperience #MarketingStrategy #BrandedMoney #OMR2026' },
+  { phase: 'PHASE 2', tag: 'EVENT', title: 'Offizielle Masterclass-Ankündigung – Timetable live', date: '18.03.2026 · sofort nach Timetable-Go-Live', text: 'Wir sind im OMR-Timetable. Und haben 200 Plätze zu vergeben.\n\nAm 6. Mai 2026 halten epay und SINC Novation eine Masterclass auf dem OMR Festival:\n"Wirkung von Touchpoints auf Markenerlebnis und Markenbildung bei Handelsmarken"\n\nWas Sie erwartet:\n→ Keynote mit neuen Studiendaten (Olaf Hartmann)\n→ Praxisbeispiele: Tchibo, Thalia, CP\n→ Panel-Diskussion für Marketingverantwortliche\n→ Max. 200 Teilnehmer – Bewerbung erforderlich\n\nFür wen: CMOs, Brand Manager und Marketingleiter, die wissen wollen, wie Gift Cards wirklich in den Marketingmix gehören.\n\nJetzt bewerben: [LINK]\n\n#OMR2026 #Masterclass #BrandedMoney #GiftCards #epay #SINC' },
+  { phase: 'PHASE 2', tag: 'SPEAKER', title: 'Speaker-Spotlight: Olaf Hartmann', date: 'KW 13–14', text: 'Er weiß, wie Kaufentscheidungen wirklich entstehen.\n\nOlaf Hartmann ist einer der führenden Experten für multisensorisches Marketing und Markenerlebnisse im deutschsprachigen Raum.\n\nAm 6. Mai erklärt er auf dem OMR Festival, was die Zahlen unserer Studie "Branded Money" über den Einfluss von Prepaid-Geschenkkarten bedeuten – und was das für den Marketingmix moderner Marken heißt.\n\nSpoiler: Die Gutscheinkarte gehört zu den am stärksten unterschätzten und gleichzeitig wirkungsvollsten Markenkontaktpunkten.\n\nNoch Plätze verfügbar. Bewerbung bis 16. April: [LINK]\n\n#OMR2026 #BrandExperience #Speaker #BrandedMoney #epay' },
+  { phase: 'PHASE 2', tag: 'DOWNLOAD', title: 'Whitepaper-Download: Branded Money', date: 'KW 12–14 · mehrfach einsetzbar', text: 'Für alle, die Marketingbudgets verantworten:\n\nUnser Whitepaper "Branded Money" liefert erstmals empirische Daten zur Wirkung von Prepaid-Geschenkkarten auf Markenkraft und Umsatz.\n\nStudiendesign: 6.010 Teilnehmer | 5 Handelsmarken | 30 Touchpoints verglichen.\n\nDas Ergebnis wird Sie überraschen.\n\nDownload: [LINK]\n\nOder kommen Sie direkt zu unserer Masterclass auf dem OMR Festival am 6. Mai. Wir diskutieren die Ergebnisse mit führenden Marketingexperten.\n\n#Whitepaper #BrandedMoney #CMO #MarketingROI #GiftCards #epay #SINC' },
+  { phase: 'PHASE 3', tag: 'COUNTDOWN', title: 'Countdown: Letzte Woche der Bewerbungsphase', date: '10.–16.04.2026', text: 'Noch eine Woche. Dann schließt die Bewerbungsphase für unsere OMR-Masterclass.\n\nAm 6. Mai erfahren Sie:\n→ Warum Prepaid-Geschenkkarten Marken um +71,4 % stärken – messbar und self-financing\n→ Wie Tchibo, Thalia und CP diesen Touchpoint strategisch nutzen\n→ Was das konkret für Ihren Marketingmix bedeutet\n\n200 Plätze. Bewerbung erforderlich. Jetzt bewerben: [LINK]\n\n#OMR2026 #BrandedMoney #GiftCards #epay #LastCall' },
+  { phase: 'PHASE 3', tag: 'LAST CALL', title: 'Verlängerung der Bewerbungsphase', date: '17.04.2026 · sofort am Morgen', text: 'Wir haben die Bewerbungsphase verlängert. Letzte Chance: bis 21. April.\n\nWer noch keinen Platz für unsere OMR-Masterclass am 6. Mai beantragt hat – jetzt ist der Moment.\n\n"Wirkung von Touchpoints auf Markenerlebnis und Markenbildung bei Handelsmarken"\n\nFür CMOs, Brand Manager und Marketingverantwortliche.\nMax. 200 Teilnehmer. Jetzt bewerben: [LINK]\n\n#OMR2026 #BrandedMoney #Masterclass #epay' },
+  { phase: 'PHASE 4', tag: 'NACHRUECK', title: 'Nachrückphase: Noch Plätze verfügbar', date: '23.04.–02.05.2026', text: 'Einige Plätze in unserer OMR-Masterclass sind noch verfügbar.\n\nWer es nicht in die erste Runde geschafft hat – oder noch unentschlossen war – kann sich jetzt noch bewerben.\n\n6. Mai | 10:30 Uhr | OMR Festival Hamburg\n"Wirkung von Touchpoints auf Markenerlebnis und Markenbildung bei Handelsmarken"\n\nJetzt bewerben: [LINK]\n\n#OMR2026 #BrandedMoney #GiftCards #epay' },
+  { phase: 'PHASE 5', tag: 'LIVE', title: 'Wir sind live auf dem OMR', date: '06.05.2026 morgens', text: 'Heute ist es soweit. Wir sind live auf dem OMR Festival in Hamburg.\n\nIn Kürze startet unsere Masterclass mit 200 Marketingverantwortlichen.\nThema: Wie Gutscheinkarten zu Markenbotschaftern werden.\n\n[Bild der Location / des Teams]\n\n#OMR2026 #BrandedMoney #epay #LiveMarketing' },
+  { phase: 'PHASE 5', tag: 'RECAP', title: 'Danke-Post nach der Masterclass', date: '06./07.05.2026 · abends', text: '200 Marketingentscheider. Eine klare Erkenntnis.\n\nVielen Dank an alle, die unsere Masterclass auf dem OMR Festival 2026 besucht haben – und an unsere fantastischen Speaker und Markenpartner.\n\n[Key Quote aus der Masterclass]\n\nWer das Whitepaper "Branded Money" noch nicht gelesen hat – hier der Download: [LINK]\n\nUnd wer ein Folgegespräch möchte: Wir sind gerne dabei.\n\n#OMR2026 #BrandedMoney #GiftCards #epay #ThankYou' }
+];
+
+function getPosts() {
+  try {
+    const s = localStorage.getItem(STORAGE_KEY);
+    return s ? JSON.parse(s) : [...DEFAULT_POSTS];
+  } catch(e) { return [...DEFAULT_POSTS]; }
+}
+
+function savePosts(posts) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(posts)); } catch(e) {}
+}
+
+function getComments() {
+  try {
+    const s = localStorage.getItem(COMMENTS_KEY);
+    return s ? JSON.parse(s) : {};
+  } catch(e) { return {}; }
+}
+
+function saveComments(c) {
+  try { localStorage.setItem(COMMENTS_KEY, JSON.stringify(c)); } catch(e) {}
+}
+
+function getLikes() {
+  try {
+    const s = localStorage.getItem(LIKES_KEY);
+    return s ? JSON.parse(s) : {};
+  } catch(e) { return {}; }
+}
+
+function saveLikes(l) {
+  try { localStorage.setItem(LIKES_KEY, JSON.stringify(l)); } catch(e) {}
+}
+
+function getTagClass(cat) {
+  const map = {Sales:'tag-sales',LinkedIn:'tag-linkedin',Content:'tag-content',Event:'tag-event',Update:'tag-update',Research:'tag-research'};
+  return map[cat] || 'tag-update';
+}
+
+function getInitials(name) {
+  return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+}
+
+function formatDate(ts) {
+  if (!ts) return '';
+  const d = new Date(ts * 1000);
+  return d.toLocaleDateString('de-DE', {day:'2-digit',month:'2-digit',year:'numeric'}) + ' · ' +
+    d.toLocaleTimeString('de-DE', {hour:'2-digit',minute:'2-digit'});
+}
+
+function renderPosts() {
+  const posts = getPosts();
+  const likes = getLikes();
+  const comments = getComments();
+  const list = document.getElementById('post-list');
+
+  const filtered = activeFilter === 'alle'
+    ? posts
+    : posts.filter(p => p.category === activeFilter);
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state"><span class="empty-icon">◻</span><div class="empty-title">Keine Beiträge</div><div class="empty-sub">Noch keine Einträge in dieser Kategorie.</div></div>`;
+    return;
+  }
+
+  const sorted = [...filtered].sort((a,b) => (b.ts||0) - (a.ts||0));
+
+  list.innerHTML = sorted.map(post => {
+    const liked = likes[post.id] || false;
+    const likeCount = liked ? 1 : 0;
+    const postComments = comments[post.id] || [];
+    const tc = getTagClass(post.category);
+
+    return `<div class="post-card" data-id="${post.id}">
+      <div class="post-card-header">
+        <div class="post-meta">
+          <div class="post-author-avatar">${getInitials(post.author)}</div>
+          <div>
+            <div class="post-author-name">${post.author}</div>
+            <div class="post-date">${post.date || ''}</div>
+          </div>
+          <span class="post-tag ${tc}">${post.category}</span>
+        </div>
+        <div class="post-actions">
+          <button class="act-btn" onclick="editPost(${post.id})">Bearbeiten</button>
+          <button class="act-btn del" onclick="deletePost(${post.id})">Löschen</button>
+        </div>
+      </div>
+      <div class="post-title" onclick="toggleComments(${post.id})">${post.title}</div>
+      <div class="post-body">${post.body}</div>
+      <div class="post-footer">
+        <button class="react-btn ${liked?'liked':''}" onclick="toggleLike(${post.id})">
+          <span class="react-icon">${liked ? '★' : '☆'}</span>
+          ${liked ? 'Markiert' : 'Merken'}
+        </button>
+        <button class="react-btn" onclick="toggleComments(${post.id})" style="margin-left:4px">
+          <span class="react-icon">◎</span>
+          Kommentieren
+        </button>
+        <button class="comment-count" onclick="toggleComments(${post.id})">
+          ${postComments.length > 0 ? `<span style="color:var(--omr-yellow)">${postComments.length}</span>` : '0'} Kommentare ›
+        </button>
+      </div>
+      <div class="comments-area" id="comments-${post.id}">
+        ${postComments.length === 0 ? '<div style="font-size:13px;color:var(--omr-gray-600);font-family:var(--mono);padding:0.5rem 0">Noch keine Kommentare. Sei der erste!</div>' : ''}
+        ${postComments.map(c => `
+          <div class="comment-item" id="comment-${c.id}">
+            <div class="comment-avatar">${getInitials(c.author)}</div>
+            <div class="comment-body">
+              <div class="comment-header">
+                <span class="comment-author">${c.author}</span>
+                <span class="comment-time">${c.time}</span>
+                <button class="comment-del" onclick="deleteComment(${post.id},'${c.id}')" title="Löschen">✕</button>
+              </div>
+              <div class="comment-text">${c.text}</div>
+            </div>
+          </div>`).join('')}
+        <div class="comment-form">
+          <textarea class="comment-input" id="cinput-${post.id}" placeholder="Kommentar schreiben…" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitComment(${post.id})}"></textarea>
+          <button class="comment-submit" onclick="submitComment(${post.id})">Senden</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleComments(postId) {
+  const area = document.getElementById('comments-' + postId);
+  area.classList.toggle('open');
+  if (area.classList.contains('open')) {
+    const inp = document.getElementById('cinput-' + postId);
+    if (inp) inp.focus();
+  }
+}
+
+function submitComment(postId) {
+  const inp = document.getElementById('cinput-' + postId);
+  if (!inp || !inp.value.trim()) return;
+  const comments = getComments();
+  if (!comments[postId]) comments[postId] = [];
+  const now = new Date();
+  comments[postId].push({
+    id: Date.now().toString(),
+    author: currentUser,
+    text: inp.value.trim(),
+    time: now.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) + ' ' + now.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})
+  });
+  saveComments(comments);
+  inp.value = '';
+  renderPosts();
+  const area = document.getElementById('comments-' + postId);
+  if (area) area.classList.add('open');
+  showToast('Kommentar hinzugefügt');
+}
+
+function deleteComment(postId, commentId) {
+  const comments = getComments();
+  if (comments[postId]) {
+    comments[postId] = comments[postId].filter(c => c.id !== commentId);
+    saveComments(comments);
+    renderPosts();
+    const area = document.getElementById('comments-' + postId);
+    if (area) area.classList.add('open');
+  }
+}
+
+function toggleLike(postId) {
+  const likes = getLikes();
+  likes[postId] = !likes[postId];
+  saveLikes(likes);
+  renderPosts();
+}
+
+function filterPosts(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPosts();
+}
+
+function openEditor(post = null) {
+  editingId = post ? post.id : null;
+  document.getElementById('modal-headline').textContent = post ? 'Beitrag bearbeiten' : 'Neuer Beitrag';
+  document.getElementById('edit-title').value = post ? post.title : '';
+  document.getElementById('edit-body').value = post ? post.body : '';
+  document.getElementById('edit-category').value = post ? post.category : 'Update';
+  document.getElementById('edit-author').value = post ? post.author : currentUser;
+  document.getElementById('editor-modal').classList.add('open');
+}
+
+function closeEditor() {
+  document.getElementById('editor-modal').classList.remove('open');
+  editingId = null;
+}
+
+function savePost() {
+  const title = document.getElementById('edit-title').value.trim();
+  const body = document.getElementById('edit-body').value.trim();
+  const category = document.getElementById('edit-category').value;
+  const author = document.getElementById('edit-author').value.trim() || currentUser;
+
+  if (!title) { document.getElementById('edit-title').focus(); return; }
+
+  const posts = getPosts();
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'});
+
+  if (editingId) {
+    const idx = posts.findIndex(p => p.id === editingId);
+    if (idx >= 0) {
+      posts[idx] = { ...posts[idx], title, body, category, author, date: dateStr };
+    }
+    showToast('Beitrag aktualisiert');
+  } else {
+    posts.push({
+      id: Date.now(),
+      title, body, category, author,
+      date: dateStr,
+      ts: Math.floor(now.getTime() / 1000)
+    });
+    showToast('Beitrag veröffentlicht');
+  }
+
+  savePosts(posts);
+  closeEditor();
+  renderPosts();
+}
+
+function editPost(id) {
+  const posts = getPosts();
+  const post = posts.find(p => p.id === id);
+  if (post) openEditor(post);
+}
+
+function deletePost(id) {
+  if (!confirm('Beitrag wirklich löschen?')) return;
+  const posts = getPosts().filter(p => p.id !== id);
+  savePosts(posts);
+  renderPosts();
+  showToast('Beitrag gelöscht');
+}
+
+// ── LinkedIn collaborative posts ─────────────────────────────────────────
+
+function getLIPosts() {
+  try {
+    const s = localStorage.getItem(LI_POSTS_KEY);
+    if (s) return JSON.parse(s);
+  } catch(e) {}
+  // seed from defaults
+  return LINKEDIN_POSTS.map((p, i) => ({
+    id: i,
+    phase: p.phase,
+    tag: p.tag,
+    title: p.title,
+    date: p.date,
+    text: p.text,
+    lastEditedBy: null,
+    lastEditedAt: null,
+    status: 'draft'
+  }));
+}
+
+function saveLIPosts(posts) {
+  try { localStorage.setItem(LI_POSTS_KEY, JSON.stringify(posts)); } catch(e) {}
+}
+
+function getLIHistory() {
+  try {
+    const s = localStorage.getItem(LI_HISTORY_KEY);
+    return s ? JSON.parse(s) : {};
+  } catch(e) { return {}; }
+}
+
+function saveLIHistory(h) {
+  try { localStorage.setItem(LI_HISTORY_KEY, JSON.stringify(h)); } catch(e) {}
+}
+
+function getStatusLabel(s) {
+  const m = {draft:'Entwurf', review:'Review', approved:'Freigegeben', published:'Veröffentlicht'};
+  return m[s] || s;
+}
+
+function getStatusColor(s) {
+  const m = {draft:'#333', review:'#003DA5', approved:'#1a3a1a', published:'#1a1a1a'};
+  return m[s] || '#333';
+}
+
+function getStatusTextColor(s) {
+  const m = {draft:'var(--omr-gray-400)', review:'#6ab8f7', approved:'#4dff4d', published:'var(--omr-yellow)'};
+  return m[s] || 'var(--omr-gray-400)';
+}
+
+let liEditingId = null;
+
+function renderLinkedInPosts() {
+  const container = document.getElementById('linkedin-posts-list');
+  const posts = getLIPosts();
+  const phaseColors = {'PHASE 1':'tag-update','PHASE 2':'tag-linkedin','PHASE 3':'tag-sales','PHASE 4':'tag-event','PHASE 5':'tag-research'};
+  const phaseLabels = {'PHASE 1':'Phase 1 · Vorbereitung & Studie','PHASE 2':'Phase 2 · Bewerbungsphase (18.03.–16.04.)','PHASE 3':'Phase 3 · Finaler Push (17.–21.04.)','PHASE 4':'Phase 4 · Nachrückphase (23.04.–05.05.)','PHASE 5':'Phase 5 · Event & Nachbereitung'};
+  let currentPhase = '';
+
+  container.innerHTML = posts.map((p) => {
+    let phaseHeader = '';
+    if (p.phase !== currentPhase) {
+      currentPhase = p.phase;
+      phaseHeader = `<div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--omr-gray-400);padding:1.5rem 0 0.75rem;display:flex;align-items:center;gap:12px">${phaseLabels[p.phase]||p.phase}<div style="flex:1;height:1px;background:#1a1a1a"></div></div>`;
+    }
+
+    const history = getLIHistory()[p.id] || [];
+    const histBadge = history.length > 0 ? `<span style="font-family:var(--mono);font-size:10px;color:var(--omr-gray-600)">${history.length} Version${history.length!==1?'en':''}</span>` : '';
+    const lastEdit = p.lastEditedBy ? `<span style="font-family:var(--mono);font-size:10px;color:var(--omr-gray-600)">Zuletzt: <span style="color:${USER_COLORS[p.lastEditedBy]||'#fff'}">${p.lastEditedBy}</span> · ${p.lastEditedAt||''}</span>` : '';
+
+    return `${phaseHeader}<div style="background:#0d0d0d;margin-bottom:1px;position:relative" id="li-card-${p.id}">
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #141414">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span class="post-tag ${phaseColors[p.phase]||'tag-update'}">${p.phase}</span>
+          <span style="font-size:12px;font-weight:700;color:var(--omr-white)">${p.tag}</span>
+          <span style="background:${getStatusColor(p.status)};color:${getStatusTextColor(p.status)};font-size:10px;font-weight:600;padding:2px 8px;border:1px solid ${getStatusTextColor(p.status)}33;font-family:var(--mono)">${getStatusLabel(p.status)}</span>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--omr-gray-600);margin-left:auto">${p.date}</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;margin-top:0.75rem;letter-spacing:-0.3px">${p.title}</div>
+        ${lastEdit ? '<div style="margin-top:0.4rem">' + lastEdit + ' ' + histBadge + '</div>' : ''}
+      </div>
+
+      <div style="padding:1.25rem 1.5rem">
+        <div style="font-size:13px;line-height:1.8;color:#aaa;white-space:pre-wrap;margin-bottom:1.25rem;font-family:var(--mono)">${p.text}</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <button onclick="openLIEditor(${p.id})" style="background:var(--omr-yellow);color:var(--omr-black);border:none;font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:8px 18px;cursor:pointer">Bearbeiten</button>
+          <button onclick="copyLIPost(${p.id})" style="background:transparent;color:var(--omr-gray-600);border:1px solid #222;font-family:var(--mono);font-size:11px;padding:7px 14px;cursor:pointer" onmouseover="this.style.borderColor='var(--omr-yellow)';this.style.color='var(--omr-yellow)'" onmouseout="this.style.borderColor='#222';this.style.color='var(--omr-gray-600)'">Kopieren</button>
+          ${history.length > 0 ? `<button onclick="showLIHistory(${p.id})" style="background:transparent;color:var(--omr-gray-600);border:1px solid #222;font-family:var(--mono);font-size:11px;padding:7px 14px;cursor:pointer" onmouseover="this.style.borderColor='#666';this.style.color='var(--omr-white)'" onmouseout="this.style.borderColor='#222';this.style.color='var(--omr-gray-600)'">Verlauf (${history.length})</button>` : ''}
+          <span style="font-size:11px;font-family:var(--mono);color:var(--omr-gray-600);margin-left:auto">${p.text.length} Zeichen · ${p.text.trim().split(/\s+/).length} Wörter</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openLIEditor(id) {
+  const posts = getLIPosts();
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  liEditingId = id;
+
+  document.getElementById('li-modal-title').textContent = `${p.tag} – ${p.phase} bearbeiten`;
+  document.getElementById('li-edit-posttitle').value = p.title;
+  document.getElementById('li-edit-text').value = p.text;
+  document.getElementById('li-edit-date').value = p.date;
+  document.getElementById('li-edit-status').value = p.status || 'draft';
+  document.getElementById('li-edit-editor').textContent = currentUser;
+  document.getElementById('li-editor-dot').style.background = USER_COLORS[currentUser] || '#666';
+
+  // show history in modal
+  renderLIHistoryInModal(id);
+  document.getElementById('li-editor-modal').classList.add('open');
+  document.getElementById('li-edit-text').focus();
+}
+
+function closeLIEditor() {
+  document.getElementById('li-editor-modal').classList.remove('open');
+  liEditingId = null;
+}
+
+function saveLIPost() {
+  if (liEditingId === null) return;
+  const posts = getLIPosts();
+  const idx = posts.findIndex(x => x.id === liEditingId);
+  if (idx < 0) return;
+
+  const newTitle = document.getElementById('li-edit-posttitle').value.trim();
+  const newText = document.getElementById('li-edit-text').value;
+  const newDate = document.getElementById('li-edit-date').value.trim();
+  const newStatus = document.getElementById('li-edit-status').value;
+  const old = posts[idx];
+
+  // save to history before overwriting
+  const history = getLIHistory();
+  if (!history[liEditingId]) history[liEditingId] = [];
+  history[liEditingId].unshift({
+    ts: new Date().toLocaleString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+    by: currentUser,
+    title: old.title,
+    text: old.text,
+    status: old.status
+  });
+  // keep max 20 versions
+  if (history[liEditingId].length > 20) history[liEditingId] = history[liEditingId].slice(0,20);
+  saveLIHistory(history);
+
+  const now = new Date().toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+  posts[idx] = { ...old, title: newTitle, text: newText, date: newDate, status: newStatus, lastEditedBy: currentUser, lastEditedAt: now };
+  saveLIPosts(posts);
+  closeLIEditor();
+  renderLinkedInPosts();
+  showToast(`✓ Post von ${currentUser} gespeichert`);
+}
+
+function renderLIHistoryInModal(id) {
+  const history = getLIHistory()[id] || [];
+  const el = document.getElementById('li-history-list');
+  if (!el) return;
+  if (history.length === 0) {
+    el.innerHTML = '<div style="font-size:12px;font-family:var(--mono);color:var(--omr-gray-600);padding:0.5rem 0">Noch keine früheren Versionen.</div>';
+    return;
+  }
+  el.innerHTML = history.map((h, i) => `
+    <div style="display:flex;gap:10px;padding:0.6rem 0;border-bottom:1px solid #141414;align-items:flex-start">
+      <div style="width:28px;height:28px;background:${USER_COLORS[h.by]||'#333'};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0a0a0a;flex-shrink:0;margin-top:1px">${(h.by||'?')[0]}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:${USER_COLORS[h.by]||'var(--omr-white)'}">${h.by} <span style="color:var(--omr-gray-600);font-weight:400;font-family:var(--mono)">· ${h.ts}</span></div>
+        <div style="font-size:11px;color:var(--omr-gray-600);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px">${h.text.slice(0,80)}…</div>
+      </div>
+      <button onclick="restoreLIVersion(${id},${i})" style="background:transparent;color:var(--omr-gray-600);border:1px solid #222;font-family:var(--mono);font-size:10px;padding:4px 10px;cursor:pointer;white-space:nowrap;flex-shrink:0" onmouseover="this.style.color='var(--omr-yellow)';this.style.borderColor='var(--omr-yellow)'" onmouseout="this.style.color='var(--omr-gray-600)';this.style.borderColor='#222'">Wiederherstellen</button>
+    </div>`).join('');
+}
+
+function restoreLIVersion(postId, histIdx) {
+  const history = getLIHistory()[postId] || [];
+  const h = history[histIdx];
+  if (!h) return;
+  document.getElementById('li-edit-text').value = h.text;
+  document.getElementById('li-edit-posttitle').value = h.title;
+  if (h.status) document.getElementById('li-edit-status').value = h.status;
+  showToast(`Version von ${h.by} (${h.ts}) wiederhergestellt`);
+}
+
+function showLIHistory(id) {
+  openLIEditor(id);
+}
+
+function copyLIPost(id) {
+  const posts = getLIPosts();
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  navigator.clipboard.writeText(p.text).then(() => showToast('Post kopiert!')).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = p.text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Post kopiert!');
+  });
+}
+
+// legacy compat
+function copyPost(idx) { copyLIPost(idx); }
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const labels = {feed:'Updates',kpis:'KPIs & Timeline',targets:'Zielgruppen',posts:'LinkedIn Posts',assets:'OMR Assets'};
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    if (b.textContent.trim() === labels[name]) b.classList.add('active');
+  });
+}
+
+function updateLICharCount() {
+  const ta = document.getElementById('li-edit-text');
+  const el = document.getElementById('li-char-count');
+  if (!ta || !el) return;
+  const len = ta.value.length;
+  const words = ta.value.trim().split(/\s+/).filter(Boolean).length;
+  const color = len > 3000 ? '#ff6b6b' : len > 2500 ? 'var(--omr-yellow)' : 'var(--omr-gray-600)';
+  el.style.color = color;
+  el.textContent = `${len} Zeichen · ${words} Wörter`;
+}
+
+function renderTeamPills() {
+  const el = document.getElementById('team-pills');
+  if (!el) return;
+  el.innerHTML = USERS.map(u => {
+    const isMe = u === currentUser;
+    return `<div style="display:flex;align-items:center;gap:4px;background:${isMe ? USER_COLORS[u] : '#1a1a1a'};padding:3px 10px;font-size:11px;font-weight:${isMe?'700':'500'};color:${isMe?'#0a0a0a':USER_COLORS[u]};font-family:var(--font);border:1px solid ${USER_COLORS[u]}${isMe?'':'44'};letter-spacing:0.2px">
+      ${isMe ? '● ' : ''}${u}
+    </div>`;
+  }).join('');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function logout() {
+  currentUser = null;
+  selectedUserOnLogin = null;
+  document.querySelectorAll('.user-pill').forEach(b => b.classList.remove('selected'));
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pw-input').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+function selectUser(el, name) {
+  selectedUserOnLogin = name;
+  document.querySelectorAll('.user-pill').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('login-error').style.display = 'none';
+}
+
+document.getElementById('login-btn').addEventListener('click', () => {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === PASSWORD && selectedUserOnLogin) {
+    currentUser = selectedUserOnLogin;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    // Show current user in header
+    document.getElementById('current-user-badge').textContent = currentUser;
+    document.getElementById('current-user-badge').style.background = USER_COLORS[currentUser] || '#666';
+    renderPosts();
+    renderLinkedInPosts();
+    renderTeamPills();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    if (!selectedUserOnLogin) {
+      document.getElementById('user-grid').style.outline = '1px solid #ff4444';
+      setTimeout(() => document.getElementById('user-grid').style.outline = '', 1500);
+    }
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+});
+
+document.getElementById('pw-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('login-btn').click();
+});
+
+document.getElementById('editor-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeEditor();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeEditor();
+    closeLIEditor();
+  }
+});
+
+document.getElementById('li-editor-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeLIEditor();
+});
+</script>
+
+<!-- ══════ LINKEDIN EDITOR MODAL ══════ -->
+<div class="modal-overlay" id="li-editor-modal">
+  <div class="modal" style="max-width:800px">
+    <div class="modal-header">
+      <div class="modal-title" id="li-modal-title">Post bearbeiten</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--omr-gray-600);font-family:var(--mono)">
+          <div id="li-editor-dot" style="width:8px;height:8px;border-radius:50%"></div>
+          <span id="li-edit-editor"></span>
+        </div>
+        <button class="modal-close" onclick="closeLIEditor()">✕</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Titel</label>
+        <input class="form-control" type="text" id="li-edit-posttitle" placeholder="Post-Titel…">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Datum / Zeitraum</label>
+          <input class="form-control" type="text" id="li-edit-date" placeholder="z.B. KW 11">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Status</label>
+          <select class="form-control" id="li-edit-status">
+            <option value="draft">Entwurf</option>
+            <option value="review">Review</option>
+            <option value="approved">Freigegeben</option>
+            <option value="published">Veröffentlicht</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-top:1rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <label class="form-label" style="margin-bottom:0">Post-Text</label>
+        <span id="li-char-count" style="font-family:var(--mono);font-size:11px;color:var(--omr-gray-600)"></span>
+      </div>
+      <textarea class="form-control" id="li-edit-text" style="min-height:280px;font-family:var(--mono);font-size:13px;line-height:1.8" placeholder="LinkedIn Post-Text…" oninput="updateLICharCount()"></textarea>
+    </div>
+
+    <!-- Versionsverlauf -->
+    <div style="border:1px solid #1a1a1a;padding:1rem;margin-top:0.25rem">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--omr-gray-600);margin-bottom:0.75rem;display:flex;align-items:center;gap:8px">
+        Versionsverlauf
+        <div style="flex:1;height:1px;background:#1a1a1a"></div>
+        <span style="font-family:var(--mono);font-size:10px;font-weight:400;color:#333">Änderungen werden automatisch gespeichert</span>
+      </div>
+      <div id="li-history-list" style="max-height:200px;overflow-y:auto"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeLIEditor()">Abbrechen</button>
+      <button class="btn-save" onclick="saveLIPost()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
